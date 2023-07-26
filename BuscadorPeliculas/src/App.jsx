@@ -33,7 +33,7 @@ function App() {
   return (
     <div className='page'>
       <header>
-        <h1>Buscador de Peliculas</h1>
+        <h1>Movie Finder</h1>
         <form className='form' onSubmit={handleSubmit}>
           <input onChange={handleChange} name='search' placeholder='Find Your Movie' type="text" />
           <button type='submit'>Buscar</button>
