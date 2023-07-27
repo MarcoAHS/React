@@ -9,21 +9,18 @@ function App() {
   const { gif, updateGif } = useGif();
   const [ random, setRandom ] = useState(0);
   useEffect(() => {
-    actualizarFact()
-  }, [])
-  function actualizarFact() {
     fetch(FACT_URL)
     .then(response => response.json())
     .then(result => {
       updateFact(result.fact)
-      actualizarGif({ fact: result.fact.split(' ').slice(0, 3).join(' ')})
     })
-  }
-  function actualizarGif({ fact }){
-    fetch(GIF_URL + fact)
+  }, [])
+  useEffect(() => {
+    if(!fact) return
+    fetch(GIF_URL + fact.split(' ').slice(0, 3).join(' '))
     .then(response => response.json())
     .then(result => updateGif(result.data))
-  }
+  }, [fact])
   function getRandomInt() {
     return Math.floor(Math.random() * 10);
   }

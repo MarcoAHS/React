@@ -1,6 +1,6 @@
 import { useState } from 'react';
 export function useFact() {
-    const [ fact, setFact ] = useState();
+    const [ fact, setFact ] = useState('');
     function updateFact(fact) {
         setFact(fact)
     }
