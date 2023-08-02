@@ -1,0 +1,22 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+html{
+  cursor: none;
+  background-image: url('/src/assets/fondo.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.cursor{
+  background-color: purple;
+  opacity: 0.5;
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  position: fixed;
+  top: 0;
+  left: 0;
+}

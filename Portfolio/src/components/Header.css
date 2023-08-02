@@ -1,0 +1,65 @@
+.descripcion{
+    color: rgb(33 33 33)
+}
+.descripcion h1{
+    font-weight: 900;
+    font-size: 2rem;
+}
+.descripcion p{
+    font-weight: 900;
+    font-size: 1rem;
+}
+.iconos{
+    list-style: none;
+    display: flex;
+    gap: 85px;
+    align-items: center;
+    text-align: center;
+    justify-content: space-evenly;
+    border: 1px solid;
+    padding: 0;
+}
+.iconos p{
+    margin: 0;
+}
+.Completo, .Basico, .Basico{
+    padding: 20px 0;
+}
+.Completo{
+    color: rgb(0, 210, 0);
+}
+.Bueno{
+    color: rgb(229, 229, 30);
+}
+.Basico{
+    color: orange;
+}
+.repositorio{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+.repositorio a{ 
+    color: rgb(33 33 33);
+    font-weight: 900;
+    font-size: 1rem;
+}
+.redes{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+.header{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+.header img{
+    border-radius: 40%;
+}
+.nombre h1{
+    display: block;
+}

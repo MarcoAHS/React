@@ -1,0 +1,25 @@
+.certificados{
+    color: rgb(33 33 33);
+    display: flex;
+    text-align: left;
+    align-items: center;
+}
+
+.certificados img{
+    width: 40px;
+    height: 40px;
+}
+.certificados li{
+    margin-top: 10px;
+}
+.certificados h1, h2{
+    margin: 0;
+}
+.card{
+    display: flex;
+    justify-content: left;
+    gap: 5px;
+}
+.fa-2xl{
+    line-height: normal;
+}
