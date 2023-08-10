@@ -5,7 +5,7 @@ import { useMovie } from './hooks/useMovie';
 import { useEffect } from 'react';
 import debounce from "just-debounce-it";
 function App() {
-  const [ busqueda, setBusqueda ] = useState('');
+  const [ busqueda ] = useState('');
   const { movies, getMovies } = useMovie({ search: busqueda });
   const [ error, setError ] = useState('');
   const moviesDebounce = debounce((search) => {
