@@ -9,6 +9,8 @@ function App() {
   const [ sortBy, setSortBy ] = useState<SortBy>(SortBy.NONE)
   const [ filterCountry, setFilterCountry ] = useState<string | null>(null)
   const original = useRef<Users[]>([])
+  const [ loading, setLoading ] = useState<boolean>(false)
+  const [ page, setPage ] = useState<number>(1)
   const handleDelete = (email: string) => {
     const array = users.filter(user => {
        return user.email !== email
@@ -32,16 +34,21 @@ function App() {
     :setSortBy(sort)
   }
   useEffect(() => {
-    fetch('https://randomuser.me/api/?results=100')
+    setLoading(true)
+    fetch(`https://randomuser.me/api/?results=10&seed=react&page=${page}`)
       .then(response => response.json())
       .then(result => {
-        setUsers(result.results)
-        original.current = result.results
+        const newUsers = users.concat(result.results)
+        setUsers(newUsers)
+        original.current = newUsers
       })
       .catch(err =>{
         console.error(err)
       })
-  }, [])
+      .finally(() => {
+        setLoading(false)
+      })
+  }, [page])
   const filteredUsers = useMemo(() => {
     return filterCountry?users.filter((user) => { return user.location.country.toLowerCase().includes(filterCountry.toLocaleLowerCase()) }):users
   }, [users, filterCountry])
@@ -61,7 +68,9 @@ function App() {
         <input type="text" placeholder='Filtrar por Pais' onChange={(e) => { setFilterCountry(e.target.value)}}/>
       </header>
       <main>
-        <UsersList handleSort={handleSort} deleteUser={handleDelete} showColors={showColors} users={sortedUsers}/>
+        {sortedUsers.length > 0 && <UsersList handleSort={handleSort} deleteUser={handleDelete} showColors={showColors} users={sortedUsers}/>}
+        {loading && <p>Cargando...</p>}
+        <button onClick={() => setPage(page + 1)}>Cargar mas Usuarios</button>
       </main>
     </div>
   )
