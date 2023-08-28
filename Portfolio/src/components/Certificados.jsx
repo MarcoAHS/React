@@ -2,7 +2,7 @@ import './Certificados.css'
 function Card({ url, title }) {
     return(
         <div className='card'>
-            <i class="fa-solid fa-school fa-beat fa-2xl"></i>
+            <i className="fa-solid fa-school fa-beat fa-2xl"></i>
             <div>
                 <h2>{title}</h2>
                 <a href={url}>Plan de Estudios/Certificado</a>
