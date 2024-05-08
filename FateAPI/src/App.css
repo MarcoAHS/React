@@ -1,24 +1,39 @@
 #root {
   max-width: 90%;
   margin: 0 auto;
-  padding: 2rem;
   text-align: center;
 }
-.servants{
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 20px;
+.contenedor{
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
 }
-.servants .servant{
-  padding: 20px;
-  border: 1px solid rgb(117, 117, 117);
-  border-radius: 25%;
-}
-button{
-  cursor: pointer;
-}
-.attributes{
+.contenido{
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  gap: 4em;
+}
+spam{
+  font-weight: bold;
+}
+.space{
+  --size: 1px;
+  width: var(--size);
+  height: var(--size);
+  background: #fff;
+  box-shadow: var(--space-layer);
+  border-radius: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 75%;
+  animation: moveStars var(--duration, 20s) linear infinite;
+}
+
+@keyframes moveStars {
+  from { transform: translateY(0); }
+  to { transform: translateY(-100vh);}
 }
