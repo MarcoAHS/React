@@ -3,6 +3,9 @@
   margin: 0 auto;
   text-align: center;
 }
+.main{
+  margin-top: 120px;
+}
 .contenedor{
   margin: 0 auto;
   display: flex;
@@ -15,6 +18,76 @@
   display: flex;
   justify-content: space-between;
   gap: 4em;
+  @media (max-width: 1250px) {
+    display: block;
+    gap: 4em;
+  }
+}
+.proyectos{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin: 40px auto;
+  max-width: 1300px;
+  @media (max-width: 1250px) {
+    display: block;
+    width: 450px;
+    .proyecto{
+      margin-bottom: 2rem;
+    }
+  }
+  .proyecto{
+    opacity: 0.8;
+    padding: 1rem;
+    border-radius: 10px;
+    transition: scale 0.2s ease-in-out;
+    img{
+      max-width: 400px;
+      border-radius: 10px;
+    }
+    &:hover{
+      scale: 1.2;
+    }
+  }
+}
+.grafica{
+  @media (max-width: 1250px) {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    justify-content: center;
+  }
+}
+.campos{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  @media (max-width: 1250px){
+    flex-direction: column;
+  }
+}
+.tecs{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  width: 400px;
+  margin: 0 auto;
+  overflow: auto;
+  gap: 1rem;
+  .tec{
+    background-color: white;
+    border-radius: 5px;
+    padding: 0.2rem 1rem;
+  }
+}
+.cv{
+  display: block;
+  button{
+    transition: scale 0.2s ease-in-out;
+    &:hover{
+      scale: 1.2;
+    }
+  }
 }
 spam{
   font-weight: bold;
@@ -32,7 +105,6 @@ spam{
   opacity: 75%;
   animation: moveStars var(--duration, 20s) linear infinite;
 }
-
 @keyframes moveStars {
   from { transform: translateY(0); }
   to { transform: translateY(-100vh);}

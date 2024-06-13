@@ -2,27 +2,66 @@ import { useEffect, useMemo, useState } from 'react'
 import './App.css'
 import { ImageList, ImageListItemBar, ImageListItem, Button, IconButton, Box, FormGroup, FormControlLabel, Switch,
           AppBar, Toolbar, Typography, Menu, MenuItem, Backdrop, CircularProgress, Accordion, AccordionSummary,
-          AccordionDetails, Fade, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, TextField } from '@mui/material';
+          AccordionDetails, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, TextField, 
+          useMediaQuery} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import { LineChart } from '@mui/x-charts/LineChart';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
 
-const API_URL = "https://api.atlasacademy.io/export/NA/basic_servant.json";
+const API_URL = "https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=Cocktail";
 const Main_Color = "#1976d2";
-
+const Pasos = 
+['Realizar la llamada a la API abierta de Cocktails para obtener informacion para la galeria de imagenes', 
+ 'Usando la estructura del JSON obtenido de la API "https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=Cocktail", de desplego en pantalla usando un pequeño componente echo para la ocacion (Utilizando React)',
+ 'Una vez mostrando los datos en pantalla me parecieron demasiados para mostrarlos de una vez, sobre todo si el objetivo de la Aplicacion era mas que solo poder visualizarlos, asi que hice una acotacion de los datos despues de realizar la llamada',
+ 'Agrege la opcion de cargar mas datos con una variable de "Bandera" para incrementar la acotacion realizada antes',
+ 'Una vez echo esto, con el uso de Componentes de Codigo abierto de React (MUI Components) implemente una barra de navegacion y los datos con los que trabajaba usando un componente personal, los adapte para usar un Componente de MUI',
+ 'Despues implemente un Backdrop como animacion de Carga para mejorar un poco la sensasion de Estados como usuario la Aplicacion y usando de nuevo componentes de MUI Components realice esta lista',
+ 'Lo siguiente en la Lista fue desplegar un Menu Lateral para agregar una nueva funcion a la Aplicacion',
+ 'A continuacion, haciendo uso de Javascript Nativo, realice un fondo con animado utilizando Keyframes y generando puntos aleatorios en la parte de atras de la Aplicacion',
+ 'Lo siguiente fue agregar una Grafia Lineal y agregarle la opcion para que el usuario pudiera interactuar con ella y modificar el contenido en tiempo real',
+ 'El siguiente paso fue añadir el diseño para celular, ya que en resolucion menor a 1250px el conenido no alcanzaba a visualizarse',
+ 'Despues, esta misma lista la habia empezado manualmente cada elemento, para hacer mas sencilla la actualizacion de la misma, y facilitar la reutilizacion, la re-factorice para poder generar una nueva solo agregando una partida al Array'
+];
+const Proyectos = [
+  {
+    id: 1,
+    name : "Blog de Cafe",
+    url: "https://boisterous-monstera-868e0e.netlify.app/",
+    img: "https://app.netlify.com/.netlify/images?url=https://d33wubrfki0l68.cloudfront.net/63bf54554e8ceb5b4c5ba3c1/screenshot_2023-01-12-00-29-11-0000.png&fit=cover&h=500&w=800",
+    tecnologias: ['PHP', 'Javascript', 'Css', 'HTML'],
+    color: '#784d3c'
+  },
+  {
+    id: 2,
+    name : "Rock Festival",
+    url: "https://beamish-florentine-cc62ea.netlify.app/",
+    img: "https://app.netlify.com/.netlify/images?url=https://d33wubrfki0l68.cloudfront.net/63df255c6a21a8146d0b1147/screenshot_2023-02-05-03-41-18-0000.png&fit=cover&h=500&w=800",
+    tecnologias: ['PHP', 'Javascript', 'Css', 'HTML'],
+    color: "#4cb8b3"
+  },
+  {
+    id: 3,
+    name : "Pagina Muestra",
+    url: "https://lucent-bublanina-a2ba53.netlify.app/",
+    img: "https://app.netlify.com/.netlify/images?url=https://d33wubrfki0l68.cloudfront.net/6642738e8bcc901e21a3409f/screenshot_2024-05-13-20-09-52-0000.webp&fit=cover&h=500&w=800",
+    tecnologias: ['ReactJS', 'Javascript', 'Css', 'HTML', 'API', 'MUI', 'ViteJS'],
+    color: "#1976d2"
+  }
+];
 export function App() {
-  const [ servants, setServants ] = useState([])
+  const [ cocktail, setCocktail ] = useState([])
   const [ page, setPage ] = useState(1)
   const [auth, setAuth] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null);
   const [open, setOpen] = useState(false);
-  const [expanded, setExpanded] = useState(false);
   const [abrir, setabrir] = useState(false);
   const [data, setData] = useState([[0, 1, 2, 3], [0, 1, 2, 1]])
-
+  const Mobile = useMediaQuery('(max-width: 1250px)')
   const toggleDrawer = (newabrir) => () => {
     setabrir(newabrir);
   };
@@ -35,10 +74,10 @@ export function App() {
   const generateSpace = (selector, size, duration) => {
     const colors = ["#fff2", "#fff4", "#fff7", "#fffc"];
     const layer = [];
-    for(let i = 1; i < 200; i++){
+    for(let i = 1; i < 500; i++){
         const color = colors[Math.floor(Math.random() * colors.length)]
-        const x = Math.floor(Math.random() * 100);
-        const y = Math.floor(Math.random() * 100);
+        const x = Math.floor(Math.random() * 300);
+        const y = Math.floor(Math.random() * 300);
         layer.push(`${x}vw ${y}vh 0 ${color}, ${x}vw ${y + 100}vh 0 ${color}, ${x}vw ${y + 200}vh 0 ${color}`);
     }
     const container = document.querySelector(selector);
@@ -54,15 +93,17 @@ export function App() {
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
-
+  const handleCV = () => {
+    const link = document.createElement("a");
+    link.download = `CV.pdf`;
+    link.href = "assets/CV.pdf";
+    link.click();
+  }
   const handleClose = () => {
     setAnchorEl(null);
   };
   const handleBackDropClose = () => {
     setOpen(false);
-  };
-  const handleExpansion = () => {
-    setExpanded((prevExpanded) => !prevExpanded);
   };
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -96,20 +137,20 @@ export function App() {
     generateSpace(".space-3", "4px", "15s")
     fetch(API_URL)
     .then(res => res.json())
-    .then(result => setServants(result))
+    .then(result => setCocktail(result["drinks"]))
   }, [])
-  const filteredServants = useMemo(() => {
+  const filteredCocktails = useMemo(() => {
     if(page > 1) {
       loading()
     }
-    return servants.slice(0, 9*page)
-  }, [page, servants])
+    return cocktail.slice(0, 9*page)
+  }, [page, cocktail])
   return (
     <div className='contenedor'>
       <div className="space space-1"></div>
       <div className="space space-2"></div>
       <div className="space space-3"></div>
-      <Box sx={{ flexGrow: 1, width: "111%", marginBottom: 5, zIndex: 2 }}>
+      <Box sx={{ flexGrow: 1, width: "100%", zIndex: 2, position: 'fixed', top: 0, left: 0 }}>
       <AppBar position="static">
         <Toolbar>
           <IconButton
@@ -125,9 +166,10 @@ export function App() {
           <Drawer open={abrir} onClose={toggleDrawer(false)}>
             {DrawerList}
           </Drawer>
+          {!Mobile && 
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             App Muestra - Marco Antonio - Echa con React y MUI Components
-          </Typography>
+          </Typography>}
           {auth && (
             <div>
               <IconButton
@@ -175,30 +217,23 @@ export function App() {
         />
       </FormGroup>
       </Box>
+      <div className='main'>
       <div className='contenido'>
         <div>
-          <ImageList sx={{ width: 500, height: 450 }} cols={3} rowHeight={164}>
-          {filteredServants.map((servant) => (
-            <ImageListItem key={servant.id}>
-              <img
-                srcSet={`${servant.face}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-                src={`${servant.face}?w=164&h=164&fit=crop&auto=format`}
-                alt={servant.name}
-                loading="lazy"
-              />
-              <ImageListItemBar
-              title={servant.name}
-              subtitle={servant.className.charAt(0).toUpperCase() + servant.className.slice(1)}
-              actionIcon={
-                <IconButton
-                  sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
-                  aria-label={`info about ${servant.name}`}
-                >
-                  
-                </IconButton>
-              }
+          <ImageList sx={{ width: Mobile ? 350 : 550, height: 450, margin: "20px auto" }} cols={3} rowHeight={164}>
+          {filteredCocktails.map((cocktail) => (
+            <ImageListItem key={cocktail.idDrink}>
+            <img
+              srcSet={`${cocktail.strDrinkThumb}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+              src={`${cocktail.strDrinkThumb}?w=164&h=164&fit=crop&auto=format`}
+              alt={cocktail.strDrink}
+              loading="lazy"
             />
-          </ImageListItem>
+            <ImageListItemBar
+            title={cocktail.strDrink}
+            subtitle={cocktail.idDrink}
+          />
+        </ImageListItem>
         ))}
           </ImageList>
           <Button style={{margin: "16px"}} variant="contained" onClick={() => setPage(page + 1)}>Cargar Mas</Button>
@@ -210,152 +245,23 @@ export function App() {
             <CircularProgress color="inherit" />
           </Backdrop>
         </div>
-        <div className='acordion' style={{ marginTop: "20px" }}>
-        <Accordion
-        expanded={expanded}
-        onChange={handleExpansion}
-        slots={{ transition: Fade }}
-        slotProps={{ transition: { timeout: 400 } }}
-        sx={{
-          '& .MuiAccordion-region': { height: expanded ? 'auto' : 0 },
-          '& .MuiAccordionDetails-root': { display: expanded ? 'block' : 'none' },
-          backgroundColor: Main_Color, color: "white"
-        }}
-      >
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon sx={{ color: "white"}} />}
-          aria-controls="panel1-content"
-          id="panel1-header"
-        >
-          <Typography><spam>Paso#1</spam> para la Realizacion de este Proyecto</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography>
-            Realizar la llamada a la API abierta del Vieojuego de Celulares Fate GO
-          </Typography>
-        </AccordionDetails>
-        </Accordion>
-        <Accordion sx={{ backgroundColor: Main_Color, color: "white" }}>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon sx={{ color: "white"}} />}
-            aria-controls="panel2-content"
-            id="panel2-header"
-          >
-            <Typography><spam>Paso#2</spam> para la realizacion de este Proyecto</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Typography>
-              Usando la estructura del JSON obtenido de la API "{API_URL}", de desplego en pantalla usando un pequeño componente
-              echo para la ocacion (Utilizando React)
-            </Typography>
-          </AccordionDetails>
-        </Accordion>
-        <Accordion sx={{ backgroundColor: Main_Color, color: "white" }}>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon sx={{ color: "white"}} />}
-            aria-controls="panel2-content"
-            id="panel2-header"
-          >
-            <Typography><spam>Paso#3</spam> para la realizacion de este Proyecto</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Typography>
-              Una vez mostrando los datos en pantalla me parecieron demasiados para mostrarlos de una vez, sobre todo
-              si el objetivo de la Aplicacion era mas que solo poder visualizarlos, asi que hice una acotacion de los datos
-              despues de realizar la llamada
-            </Typography>
-          </AccordionDetails>
-        </Accordion>
-        <Accordion sx={{ backgroundColor: Main_Color, color: "white" }}>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon sx={{ color: "white"}} />}
-            aria-controls="panel2-content"
-            id="panel2-header"
-          >
-            <Typography><spam>Paso#4</spam> para la realizacion de este Proyecto</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Typography>
-              Agrege la opcion de cargar mas datos con una variable de "Bandera" para incrementar la acotacion realizada antes
-            </Typography>
-          </AccordionDetails>
-        </Accordion>
-        <Accordion sx={{ backgroundColor: Main_Color, color: "white" }}>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon sx={{ color: "white"}} />}
-            aria-controls="panel2-content"
-            id="panel2-header"
-          >
-            <Typography><spam>Paso#5</spam> para la realizacion de este Proyecto</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Typography>
-              Una vez echo esto, con el uso de Componentes de Codigo abierto de React (MUI Components) implemente
-              una barra de navegacion y los datos con los que trabajaba usando un componente personal, los adapte para usar un Componente
-              de MUI
-            </Typography>
-          </AccordionDetails>
-        </Accordion>
-        <Accordion sx={{ backgroundColor: Main_Color, color: "white" }}>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon sx={{ color: "white"}} />}
-            aria-controls="panel2-content"
-            id="panel2-header"
-          >
-            <Typography><spam>Paso#6</spam> para la realizacion de este Proyecto</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Typography>
-              Despues implemente un Backdrop como animacion de Carga para mejorar un poco la sensasion de Estados como usuario
-              la Aplicacion y usando de nuevo componentes de MUI Components realice esta lista
-            </Typography>
-          </AccordionDetails>
-        </Accordion>
-        <Accordion sx={{ backgroundColor: Main_Color, color: "white" }}>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon sx={{ color: "white"}} />}
-            aria-controls="panel2-content"
-            id="panel2-header"
-          >
-            <Typography><spam>Paso#7</spam> para la realizacion de este Proyecto</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Typography>
-              Lo siguiente en la Lista fue desplegar un Menu Lateral para agregar una nueva funcion a la Aplicacion
-            </Typography>
-          </AccordionDetails>
-        </Accordion>
-        <Accordion sx={{ backgroundColor: Main_Color, color: "white" }}>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon sx={{ color: "white"}} />}
-            aria-controls="panel2-content"
-            id="panel2-header"
-          >
-            <Typography><spam>Paso#8</spam> para la realizacion de este Proyecto</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Typography>
-              A continuacion, haciendo uso de Javascript Nativo, realice un fondo con 
-              animado utilizando Keyframes y generando puntos aleatorios en la parte de 
-              atras de la Aplicacion
-            </Typography>
-          </AccordionDetails>
-        </Accordion>
-        <Accordion sx={{ backgroundColor: Main_Color, color: "white" }}>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon sx={{ color: "white"}} />}
-            aria-controls="panel2-content"
-            id="panel2-header"
-          >
-            <Typography><spam>Paso#9</spam> para la realizacion de este Proyecto</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Typography>
-              Lo siguiente fue agregar una Grafia Lineal y agregarle la opcion para que el usuario pudiera interactuar
-              con ella y modificar el contenido en tiempo real
-            </Typography>
-          </AccordionDetails>
-        </Accordion>
+        <div className='acordion' style={{ width: Mobile ? 350 : 650, margin: Mobile ? "40px auto" : "20px auto" }}>
+        {Pasos.map((message, index) => (
+          <Accordion key={index + 1} sx={{ backgroundColor: Main_Color, color: "white" }}>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon sx={{ color: "white"}} />}
+              aria-controls="panel2-content"
+              id="panel2-header"
+            >
+              <Typography><spam>Paso#{index + 1} para la Realizacion de este Proyecto</spam></Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography>
+                {message}
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
+        ))}
         <Accordion sx={{ backgroundColor: Main_Color, color: "white" }}>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon sx={{ color: "white"}} />}
@@ -366,18 +272,18 @@ export function App() {
           </AccordionSummary>
           <AccordionDetails>
             <Typography>
-              Al tener acceso a Componentes y a la API que utilice para el Album de imagenes de antemano tarde 2 dias
-              en la realizacion de este Proyecto, sin contar luego hacer algun Test y el Despliegue posterior.
+              Al tener acceso a Componentes y a la API que utilice para el Album de imagenes de antemano tarde 5 dias
+              en la realizacion de este Proyecto, refactorizacion, y funcionalidad sin contar luego hacer algun Test y el Despliegue posterior.
             </Typography>
           </AccordionDetails>
         </Accordion>
         </div>
       </div>
       <div style={{ marginTop: 100, color: "white" }} className='contenido'>
-        <div>
+        <div className='grafica'>
         <h2>Grafica Linear</h2>
           <LineChart
-            sx={{backgroundColor: Main_Color}}
+            sx={{backgroundColor: Main_Color, borderRadius: 10}}
             xAxis={[{ data: data[0] }]}
             yAxis={[{
               colorMap: {
@@ -392,26 +298,50 @@ export function App() {
                 data: data[1],
               },
             ]}
-            width={700}
-            height={500}
+            width={Mobile ? 350 : 600}
+            height={Mobile ? 400 : 600}
           />
         </div>
         <Box
           component="form"
           onSubmit={handleSubmit}
           sx={{
-            '& > :not(style)': { m: 1, width: '25ch' },
+            '& > :not(style)': { m: 1, width: '25ch' }
           }}
           noValidate
           autoComplete="off"
         >
           <div style={{ display: "block", width: 600}}>
             <h2>Agregar Datos a la Grafica</h2>
-              <TextField name='X' type='number' sx={{ marginRight: "10px", backgroundColor: "white", opacity: 0.4}} id="X" label="X: " variant="outlined" />
-              <TextField name='Y' type='number' sx={{ backgroundColor: "white", opacity: 0.4}} id="Y" label="Y: " variant="outlined" />
+              <div className='campos'>
+                <TextField name='X' type='number' sx={{ backgroundColor: "white", opacity: 0.4}} id="X" label="X: " variant="outlined" />
+                <TextField name='Y' type='number' sx={{ backgroundColor: "white", opacity: 0.4}} id="Y" label="Y: " variant="outlined" />
+              </div>
           </div>
           <Button type='submit' variant="contained">Agregar</Button>
         </Box>
+      </div>
+      <h2>+Proyectos</h2>
+      <div className='contenido proyectos'>
+        {Proyectos.map((proyecto) => (
+          <div style={{ backgroundColor: proyecto.color }} className='proyecto' key={proyecto.id}>
+            <a href={proyecto.url} target='_blank' rel="noreferrer">
+              <img src={proyecto.img} alt={"Proyecto Numero#" + proyecto.id} />
+            </a>
+            <div className='tecs'>
+              {proyecto.tecnologias.map((tec,i) => (
+                <p style={{ color: proyecto.color}} className='tec' key={i}>{tec}</p>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+      </div>
+      <div style={{margin: "20px auto"}} className='contenido cv'>
+        <h2>Por ultimo, puedes descargar mi Curriculum, espero tu llamada!</h2>
+        <Button onClick={handleCV} style={{width: '300px', height: '60px'}} variant="contained" startIcon={<AttachFileIcon />}>
+          Descargar CV
+        </Button>
       </div>
     </div>
   )
